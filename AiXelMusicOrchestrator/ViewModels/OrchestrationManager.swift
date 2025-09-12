@@ -74,18 +74,31 @@ class OrchestrationManager: ObservableObject {
     
     private func createComposition(from data: OrchestrationData, parameters: GenerationParameters) throws -> Composition {
         let measures = data.measures.enumerated().map { index, measureData in
+            let voicing = measureData.voicing
+            // Build note list from available voicing tones as a reasonable fallback
+            let notePool = [
+                voicing.flute,
+                voicing.piano,
+                voicing.violin1,
+                voicing.violin2,
+                voicing.viola1,
+                voicing.viola2,
+                voicing.cello,
+                voicing.bass
+            ].compactMap { $0 }
+            
             let chord = Chord(
-                symbol: measureData.chordSymbol,
-                notes: measureData.notes,
+                symbol: measureData.chord,
+                notes: notePool.isEmpty ? [] : Array(Set(notePool)),
                 voicing: Voicing(
-                    flute: measureData.voicing.flute,
-                    piano: measureData.voicing.piano,
-                    violin1: measureData.voicing.violin1,
-                    violin2: measureData.voicing.violin2,
-                    viola1: measureData.voicing.viola1,
-                    viola2: measureData.voicing.viola2,
-                    cello: measureData.voicing.cello,
-                    bass: measureData.voicing.bass
+                    flute: voicing.flute,
+                    piano: voicing.piano,
+                    violin1: voicing.violin1,
+                    violin2: voicing.violin2,
+                    viola1: voicing.viola1,
+                    viola2: voicing.viola2,
+                    cello: voicing.cello,
+                    bass: voicing.bass
                 )
             )
             
@@ -275,26 +288,6 @@ class OrchestrationManager: ObservableObject {
     }
 }
 
-// MARK: - Supporting Data Structures
-
-struct OrchestrationData {
-    let measures: [MeasureData]
-}
-
-struct MeasureData {
-    let chordSymbol: String
-    let notes: [String]
-    let voicing: VoicingData
-}
-
-struct VoicingData {
-    let flute: String?
-    let piano: String?
-    let violin1: String?
-    let violin2: String?
-    let viola1: String?
-    let viola2: String?
-    let cello: String?
-    let bass: String?
-}
+// Removed duplicate data structures to avoid name collisions; we now rely on
+// the Codable types declared in `Utils/PythonBridge.swift`.
 

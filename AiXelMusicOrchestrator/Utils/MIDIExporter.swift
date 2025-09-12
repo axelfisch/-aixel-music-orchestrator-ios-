@@ -60,6 +60,7 @@ class MIDIExporter {
         let ticksPerBeat = 480.0
         let ticksPerMeasure = Int(beatsPerMeasure * ticksPerBeat)
         
+        var lastTick: Int = 0
         for (measureIndex, measure) in composition.measures.enumerated() {
             guard let note = extractNoteForInstrument(
                 from: measure,
@@ -72,18 +73,18 @@ class MIDIExporter {
             let startTick = measureIndex * ticksPerMeasure
             let duration = ticksPerMeasure // Full measure duration
             
-            // Note On
+            // Note On (delta from previous event)
             let noteOnEvent = MIDIEvent.noteOn(
                 note: UInt7(midiNoteNumber),
                 velocity: UInt7(velocity),
                 channel: channel
             )
             track.events.append(MIDIEvent.timeStamped(
-                delta: .ticks(UInt32(startTick)),
+                delta: .ticks(UInt32(startTick - lastTick)),
                 event: noteOnEvent
             ))
             
-            // Note Off
+            // Note Off after duration
             let noteOffEvent = MIDIEvent.noteOff(
                 note: UInt7(midiNoteNumber),
                 velocity: UInt7(0),
@@ -93,6 +94,7 @@ class MIDIExporter {
                 delta: .ticks(UInt32(duration)),
                 event: noteOffEvent
             ))
+            lastTick = startTick + duration
         }
     }
     
