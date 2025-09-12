@@ -222,9 +222,11 @@ class InstrumentEngine: ObservableObject {
     }
     
     private func startPlaybackTimer() {
-        playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [weak self] _ in
+        // Lower frequency to reduce CPU and align timers to system clock
+        playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { [weak self] _ in
             self?.updatePlayback()
         }
+        RunLoop.main.add(playbackTimer!, forMode: .common)
     }
     
     private func stopPlaybackTimer() {
@@ -235,7 +237,8 @@ class InstrumentEngine: ObservableObject {
     private func updatePlayback() {
         guard isPlaying else { return }
         
-        currentPosition += 0.01 * (tempo / 120.0)
+        // Match increment to timer interval to avoid drift
+        currentPosition += 0.02 * (tempo / 120.0)
         
         // Check for notes to play at current position
         for note in currentNotes {

@@ -16,28 +16,19 @@ let package = Package(
         ),
     ],
     dependencies: [
-        // AudioKit for audio processing and synthesis
+        // AudioKit for audio processing and synthesis (consolidated)
         .package(url: "https://github.com/AudioKit/AudioKit.git", from: "5.6.0"),
-        .package(url: "https://github.com/AudioKit/SoundpipeAudioKit.git", from: "5.6.0"),
-        .package(url: "https://github.com/AudioKit/AudioKitEX.git", from: "5.6.0"),
-        .package(url: "https://github.com/AudioKit/DunneAudioKit.git", from: "5.6.0"),
-        
         // MIDI processing
         .package(url: "https://github.com/AudioKit/MIDIKit.git", from: "0.9.0"),
-        
-        // Additional audio utilities
-        .package(url: "https://github.com/AudioKit/Tonic.git", from: "1.0.0"),
     ],
     targets: [
         .target(
             name: "AiXelMusicOrchestrator",
             dependencies: [
                 .product(name: "AudioKit", package: "AudioKit"),
-                .product(name: "SoundpipeAudioKit", package: "SoundpipeAudioKit"),
-                .product(name: "AudioKitEX", package: "AudioKitEX"),
-                .product(name: "DunneAudioKit", package: "DunneAudioKit"),
+                // Remove extra AudioKit subpackages to reduce binary size
                 .product(name: "MIDIKit", package: "MIDIKit"),
-                .product(name: "Tonic", package: "Tonic"),
+                .product(name: "AudioKit", package: "AudioKit"),
             ],
             resources: [
                 .process("Resources")
