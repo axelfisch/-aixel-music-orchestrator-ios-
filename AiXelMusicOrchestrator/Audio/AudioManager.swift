@@ -24,7 +24,7 @@ class AudioManager: ObservableObject {
     @Published var instrumentMutes: [Bool] = Array(repeating: false, count: 8)
     @Published var instrumentSolos: [Bool] = Array(repeating: false, count: 8)
     @Published var masterVolume: Double = 0.8
-    @Published var masterReverb: Double = 0.3
+    @Published var masterReverbMix: Double = 0.3
     @Published var tempo: Double = 120
     @Published var isLooping: Bool = false
     
@@ -32,11 +32,12 @@ class AudioManager: ObservableObject {
     private var audioEngine: AudioEngine!
     private var instrumentEngines: [InstrumentEngine] = []
     private var masterMixer: Mixer!
-    private var masterReverb: Reverb!
+    private var masterReverbNode: Reverb!
     private var currentComposition: Composition?
     private var playbackTimer: Timer?
     private var startTime: Date?
     private var selectedSection: PlaybackSection = .full
+    private var compositionObserver: NSObjectProtocol?
     
     private init() {
         setupAudioEngine()
@@ -71,18 +72,18 @@ class AudioManager: ObservableObject {
         }
         
         // Create master reverb
-        masterReverb = Reverb(masterMixer)
-        masterReverb.dryWetMix = AUValue(masterReverb)
+        masterReverbNode = Reverb(masterMixer)
+        masterReverbNode.dryWetMix = AUValue(masterReverbMix)
         
         // Set audio engine output
-        audioEngine.output = masterReverb
+        audioEngine.output = masterReverbNode
         
         // Setup notifications
         setupNotifications()
     }
     
     private func setupNotifications() {
-        NotificationCenter.default.addObserver(
+        compositionObserver = NotificationCenter.default.addObserver(
             forName: .compositionGenerated,
             object: nil,
             queue: .main
@@ -101,16 +102,21 @@ class AudioManager: ObservableObject {
         currentComposition = composition
         totalDuration = calculateDuration(composition)
         
-        // Prepare audio for each instrument
-        for (index, engine) in instrumentEngines.enumerated() {
-            await engine.loadComposition(composition, instrumentIndex: index)
+        // Prepare audio for each instrument concurrently
+        await withTaskGroup(of: Void.self) { group in
+            for (index, engine) in instrumentEngines.enumerated() {
+                group.addTask {
+                    await engine.loadComposition(composition, instrumentIndex: index)
+                }
+            }
         }
     }
     
     private func calculateDuration(_ composition: Composition) -> Double {
         let beatsPerMeasure = 4.0 // Assuming 4/4 time
         let totalBeats = Double(composition.measures.count) * beatsPerMeasure
-        let beatsPerSecond = composition.tempo / 60.0
+        let activeTempo = tempo > 0 ? tempo : composition.tempo
+        let beatsPerSecond = activeTempo / 60.0
         return totalBeats / beatsPerSecond
     }
     
@@ -198,10 +204,9 @@ class AudioManager: ObservableObject {
     
     private func startPlaybackTimer() {
         playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
-            Task {
-                await self?.updatePlaybackPosition()
-            }
+            self?.updatePlaybackPosition()
         }
+        playbackTimer?.tolerance = 0.02
     }
     
     private func stopPlaybackTimer() {
@@ -284,8 +289,8 @@ class AudioManager: ObservableObject {
     }
     
     func setMasterReverb(_ reverb: Double) {
-        masterReverb = reverb
-        masterReverb.dryWetMix = AUValue(reverb)
+        masterReverbMix = reverb
+        masterReverbNode?.dryWetMix = AUValue(reverb)
     }
     
     func setTempo(_ newTempo: Double) {
@@ -320,7 +325,9 @@ class AudioManager: ObservableObject {
     deinit {
         audioEngine.stop()
         stopPlaybackTimer()
-        NotificationCenter.default.removeObserver(self)
+        if let compositionObserver = compositionObserver {
+            NotificationCenter.default.removeObserver(compositionObserver)
+        }
     }
 }
 

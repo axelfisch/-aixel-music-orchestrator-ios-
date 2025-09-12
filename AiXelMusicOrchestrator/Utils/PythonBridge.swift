@@ -264,6 +264,18 @@ struct InstrumentVoicing: Codable {
     let bass: String?
 }
 
+struct OrchestratedMeasure: Codable {
+    let measure: Int
+    let chord: String
+    let voicing: InstrumentVoicing
+    let dynamics: String
+    let articulation: String
+}
+
+struct OrchestrationData: Codable {
+    let measures: [OrchestratedMeasure]
+}
+
 struct OrchestrationInfo: Codable {
     let texture: String
     let density: String

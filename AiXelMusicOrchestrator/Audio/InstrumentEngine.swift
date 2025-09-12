@@ -26,11 +26,13 @@ class InstrumentEngine: ObservableObject {
     private var isPlaying: Bool = false
     private var currentPosition: Double = 0
     private var tempo: Double = 120
+    private var lastUpdateTime: Date?
     
     // Audio parameters
     private var volume: Double = 0.8
     private var reverbMix: Double = 0.3
     private var isMuted: Bool = false
+    private var isSamplerLoaded: Bool = false
     
     var output: Node {
         return mixer
@@ -109,6 +111,7 @@ class InstrumentEngine: ObservableObject {
             do {
                 let sampleURL = try await getSampleURL(for: instrumentType)
                 try await sampler.loadAudioFile(sampleURL)
+                isSamplerLoaded = true
             } catch {
                 print("Failed to load samples for \(instrumentType): \(error)")
                 // Fall back to oscillator
@@ -199,12 +202,15 @@ class InstrumentEngine: ObservableObject {
         
         isPlaying = true
         currentPosition = position
+        lastUpdateTime = Date()
         
         // Start playback timer
         startPlaybackTimer()
         
         // Start oscillator if using synthesis
-        oscillator.start()
+        if !isSamplerLoaded {
+            oscillator.start()
+        }
     }
     
     func pause() {
@@ -222,9 +228,10 @@ class InstrumentEngine: ObservableObject {
     }
     
     private func startPlaybackTimer() {
-        playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [weak self] _ in
+        playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { [weak self] _ in
             self?.updatePlayback()
         }
+        playbackTimer?.tolerance = 0.01
     }
     
     private func stopPlaybackTimer() {
@@ -234,8 +241,11 @@ class InstrumentEngine: ObservableObject {
     
     private func updatePlayback() {
         guard isPlaying else { return }
-        
-        currentPosition += 0.01 * (tempo / 120.0)
+        guard let lastUpdateTime = lastUpdateTime else { return }
+        let now = Date()
+        let delta = now.timeIntervalSince(lastUpdateTime)
+        currentPosition += delta * (tempo / 120.0)
+        self.lastUpdateTime = now
         
         // Check for notes to play at current position
         for note in currentNotes {
@@ -256,7 +266,7 @@ class InstrumentEngine: ObservableObject {
         let frequency = midiNoteToFrequency(midiNoteNumber)
         
         // Play on sampler if available, otherwise use oscillator
-        if sampler.isLoaded {
+        if isSamplerLoaded {
             sampler.play(noteNumber: midiNoteNumber, velocity: note.velocity)
         } else {
             oscillator.frequency = frequency
@@ -271,7 +281,7 @@ class InstrumentEngine: ObservableObject {
     private func stopNote(_ note: MIDINote) {
         let midiNoteNumber = getMIDINoteNumber(from: note.note)
         
-        if sampler.isLoaded {
+        if isSamplerLoaded {
             sampler.stop(noteNumber: midiNoteNumber)
         }
         
