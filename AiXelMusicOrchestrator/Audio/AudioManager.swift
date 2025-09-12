@@ -32,7 +32,8 @@ class AudioManager: ObservableObject {
     private var audioEngine: AudioEngine!
     private var instrumentEngines: [InstrumentEngine] = []
     private var masterMixer: Mixer!
-    private var masterReverb: Reverb!
+    // Rename to avoid conflict with @Published masterReverb (Double)
+    private var masterReverbNode: Reverb!
     private var currentComposition: Composition?
     private var playbackTimer: Timer?
     private var startTime: Date?
@@ -71,11 +72,11 @@ class AudioManager: ObservableObject {
         }
         
         // Create master reverb
-        masterReverb = Reverb(masterMixer)
-        masterReverb.dryWetMix = AUValue(masterReverb)
+        masterReverbNode = Reverb(masterMixer)
+        masterReverbNode.dryWetMix = AUValue(masterReverb)
         
         // Set audio engine output
-        audioEngine.output = masterReverb
+        audioEngine.output = masterReverbNode
         
         // Setup notifications
         setupNotifications()
@@ -285,7 +286,7 @@ class AudioManager: ObservableObject {
     
     func setMasterReverb(_ reverb: Double) {
         masterReverb = reverb
-        masterReverb.dryWetMix = AUValue(reverb)
+        masterReverbNode.dryWetMix = AUValue(reverb)
     }
     
     func setTempo(_ newTempo: Double) {

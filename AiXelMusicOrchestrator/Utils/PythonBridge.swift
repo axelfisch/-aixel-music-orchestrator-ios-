@@ -10,6 +10,18 @@ import Foundation
 class PythonBridge {
     private let pythonExecutable: String
     private let scriptPath: String
+    private let allowedFunctions: Set<String> = [
+        "generate_harmonic_progression",
+        "generate_voicings",
+        "orchestrate",
+        "export_musicxml",
+        "export_midi",
+        "export_pdf",
+        "validate_environment",
+        "get_available_keys",
+        "get_available_forms",
+        "get_available_styles"
+    ]
     
     init() {
         // In a real implementation, this would be configured based on the deployment environment
@@ -121,6 +133,14 @@ class PythonBridge {
     }
     
     private func runPythonProcess(function: String, input: Data) throws -> Data {
+        // Validate script and function
+        guard !scriptPath.isEmpty, FileManager.default.fileExists(atPath: scriptPath) else {
+            throw PythonBridgeError.scriptNotFound
+        }
+        guard allowedFunctions.contains(function) else {
+            throw PythonBridgeError.invalidInput
+        }
+        
         let process = Process()
         let inputPipe = Pipe()
         let outputPipe = Pipe()
@@ -128,17 +148,21 @@ class PythonBridge {
         
         // Configure process
         process.executableURL = URL(fileURLWithPath: pythonExecutable)
-        process.arguments = [scriptPath, function]
+        process.arguments = ["-u", scriptPath, function]
         process.standardInput = inputPipe
         process.standardOutput = outputPipe
         process.standardError = errorPipe
-        
-        // Write input data
-        inputPipe.fileHandleForWriting.write(input)
-        inputPipe.fileHandleForWriting.closeFile()
+        var env = ProcessInfo.processInfo.environment
+        env["PYTHONUNBUFFERED"] = "1"
+        process.environment = env
         
         // Run process
         try process.run()
+        
+        // Write input after process starts to avoid broken pipe if startup fails
+        inputPipe.fileHandleForWriting.write(input)
+        inputPipe.fileHandleForWriting.closeFile()
+        
         process.waitUntilExit()
         
         // Check for errors
