@@ -7,20 +7,40 @@
 
 import Foundation
 
+// MARK: - Composition Parameters & Enums (for tests)
+
+struct CompositionParameters {
+    let key: String
+    let form: CompositionForm
+    let style: CompositionStyle
+    let tempo: Int
+}
+
+enum CompositionForm: Equatable, Codable {
+    case aaba
+    case abac
+    case sixteenBars
+    case thirtyTwoBars
+}
+
+enum CompositionStyle: Equatable, Codable {
+    case jazzPop
+}
+
 // MARK: - Core Musical Structures
 
 struct Composition: Identifiable, Codable {
     let id = UUID()
     let title: String
     let key: String
-    let form: String
-    let style: String
-    let tempo: Double
+    let form: CompositionForm
+    let style: CompositionStyle
+    let tempo: Int
     let measures: [Measure]
     let sections: [Section]
     let createdAt: Date
     
-    init(title: String = "Untitled", key: String, form: String, style: String, tempo: Double = 120, measures: [Measure], sections: [Section]) {
+    init(title: String = "Untitled", key: String, form: CompositionForm, style: CompositionStyle, tempo: Int = 120, measures: [Measure], sections: [Section]) {
         self.title = title
         self.key = key
         self.form = form
@@ -34,8 +54,8 @@ struct Composition: Identifiable, Codable {
     static let sample = Composition(
         title: "Sample Jazz Waltz",
         key: "Eb",
-        form: "AABA",
-        style: "Jazz Pop",
+        form: .aaba,
+        style: .jazzPop,
         tempo: 120,
         measures: [
             Measure(number: 1, chord: Chord(symbol: "Ebadd9/G", notes: ["G2", "Bb3", "Eb4", "F4"])),

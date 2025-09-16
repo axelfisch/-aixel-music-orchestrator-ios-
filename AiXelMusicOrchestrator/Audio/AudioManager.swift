@@ -32,7 +32,7 @@ class AudioManager: ObservableObject {
     private var audioEngine: AudioEngine!
     private var instrumentEngines: [InstrumentEngine] = []
     private var masterMixer: Mixer!
-    private var masterReverb: Reverb!
+    private var masterReverbNode: Reverb!
     private var currentComposition: Composition?
     private var playbackTimer: Timer?
     private var startTime: Date?
@@ -53,6 +53,21 @@ class AudioManager: ObservableObject {
             NotificationCenter.default.post(name: .audioEngineStateChanged, object: false)
         }
     }
+
+    // MARK: - Test-facing APIs expected by unit tests
+    
+    func initializeAudioEngine() -> Bool {
+        do {
+            try audioEngine.start()
+            return true
+        } catch {
+            return false
+        }
+    }
+    
+    var isEngineRunning: Bool {
+        return audioEngine.avEngine.isRunning
+    }
     
     private func setupAudioEngine() {
         audioEngine = AudioEngine()
@@ -71,11 +86,11 @@ class AudioManager: ObservableObject {
         }
         
         // Create master reverb
-        masterReverb = Reverb(masterMixer)
-        masterReverb.dryWetMix = AUValue(masterReverb)
+        masterReverbNode = Reverb(masterMixer)
+        masterReverbNode.dryWetMix = AUValue(masterReverb)
         
         // Set audio engine output
-        audioEngine.output = masterReverb
+        audioEngine.output = masterReverbNode
         
         // Setup notifications
         setupNotifications()
@@ -277,6 +292,55 @@ class AudioManager: ObservableObject {
             }
         }
     }
+
+    // MARK: - Convenience wrappers expected by tests (InstrumentType keyed)
+    
+    func createInstrumentEngine(for instrumentType: InstrumentType) -> InstrumentEngine? {
+        return instrumentEngines.first { $0.instrumentType == instrumentType }
+    }
+    
+    func loadComposition(_ composition: Composition) {
+        Task { await loadComposition(composition) }
+    }
+    
+    func setVolume(_ volume: Double, for instrumentType: InstrumentType) {
+        if let index = instrumentEngines.firstIndex(where: { $0.instrumentType == instrumentType }) {
+            setInstrumentVolume(index, volume)
+        }
+    }
+    
+    func getVolume(for instrumentType: InstrumentType) -> Double {
+        if let index = instrumentEngines.firstIndex(where: { $0.instrumentType == instrumentType }) {
+            return instrumentVolumes[index]
+        }
+        return 0
+    }
+    
+    func setReverb(_ reverb: Double, for instrumentType: InstrumentType) {
+        if let index = instrumentEngines.firstIndex(where: { $0.instrumentType == instrumentType }) {
+            setInstrumentReverb(index, reverb)
+        }
+    }
+    
+    func getReverb(for instrumentType: InstrumentType) -> Double {
+        if let index = instrumentEngines.firstIndex(where: { $0.instrumentType == instrumentType }) {
+            return instrumentReverbs[index]
+        }
+        return 0
+    }
+    
+    func setMuted(_ muted: Bool, for instrumentType: InstrumentType) {
+        if let index = instrumentEngines.firstIndex(where: { $0.instrumentType == instrumentType }) {
+            setInstrumentMute(index, muted)
+        }
+    }
+    
+    func isMuted(_ instrumentType: InstrumentType) -> Bool {
+        if let index = instrumentEngines.firstIndex(where: { $0.instrumentType == instrumentType }) {
+            return instrumentMutes[index]
+        }
+        return false
+    }
     
     func setMasterVolume(_ volume: Double) {
         masterVolume = volume
@@ -285,7 +349,7 @@ class AudioManager: ObservableObject {
     
     func setMasterReverb(_ reverb: Double) {
         masterReverb = reverb
-        masterReverb.dryWetMix = AUValue(reverb)
+        masterReverbNode.dryWetMix = AUValue(reverb)
     }
     
     func setTempo(_ newTempo: Double) {
