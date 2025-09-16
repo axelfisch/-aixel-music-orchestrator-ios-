@@ -32,7 +32,7 @@ class AudioManager: ObservableObject {
     private var audioEngine: AudioEngine!
     private var instrumentEngines: [InstrumentEngine] = []
     private var masterMixer: Mixer!
-    private var masterReverb: Reverb!
+    private var masterReverbNode: Reverb!
     private var currentComposition: Composition?
     private var playbackTimer: Timer?
     private var startTime: Date?
@@ -71,11 +71,11 @@ class AudioManager: ObservableObject {
         }
         
         // Create master reverb
-        masterReverb = Reverb(masterMixer)
-        masterReverb.dryWetMix = AUValue(masterReverb)
+        masterReverbNode = Reverb(masterMixer)
+        masterReverbNode.dryWetMix = AUValue(masterReverb)
         
         // Set audio engine output
-        audioEngine.output = masterReverb
+        audioEngine.output = masterReverbNode
         
         // Setup notifications
         setupNotifications()
@@ -104,6 +104,13 @@ class AudioManager: ObservableObject {
         // Prepare audio for each instrument
         for (index, engine) in instrumentEngines.enumerated() {
             await engine.loadComposition(composition, instrumentIndex: index)
+        }
+    }
+    
+    // Synchronous wrapper for tests
+    func loadComposition(_ composition: Composition) {
+        Task { @MainActor in
+            await self.loadComposition(composition)
         }
     }
     
@@ -285,7 +292,7 @@ class AudioManager: ObservableObject {
     
     func setMasterReverb(_ reverb: Double) {
         masterReverb = reverb
-        masterReverb.dryWetMix = AUValue(reverb)
+        masterReverbNode.dryWetMix = AUValue(reverb)
     }
     
     func setTempo(_ newTempo: Double) {
@@ -321,6 +328,71 @@ class AudioManager: ObservableObject {
         audioEngine.stop()
         stopPlaybackTimer()
         NotificationCenter.default.removeObserver(self)
+    }
+}
+
+// MARK: - Test convenience API expected by unit tests
+
+extension AudioManager {
+    var isEngineRunning: Bool {
+        return audioEngine.avEngine.isRunning
+    }
+    
+    func initializeAudioEngine() -> Bool {
+        do {
+            try audioEngine.start()
+            return true
+        } catch {
+            print("Audio engine start failed: \(error)")
+            return false
+        }
+    }
+    
+    func createInstrumentEngine(for type: InstrumentType) -> InstrumentEngine? {
+        // Return an existing engine of that type or create a new temporary one
+        if let existing = instrumentEngines.first(where: { $0.instrumentType == type }) {
+            return existing
+        }
+        return InstrumentEngine(type: type)
+    }
+    
+    func setVolume(_ volume: Float, for instrument: InstrumentType) {
+        if let index = InstrumentType.allCases.firstIndex(of: instrument) {
+            setInstrumentVolume(index, Double(volume))
+        }
+    }
+    
+    func getVolume(for instrument: InstrumentType) -> Float {
+        if let index = InstrumentType.allCases.firstIndex(of: instrument) {
+            return Float(instrumentVolumes[index])
+        }
+        return 0
+    }
+    
+    func setReverb(_ reverb: Float, for instrument: InstrumentType) {
+        if let index = InstrumentType.allCases.firstIndex(of: instrument) {
+            setInstrumentReverb(index, Double(reverb))
+        }
+    }
+    
+    func getReverb(for instrument: InstrumentType) -> Float {
+        if let index = InstrumentType.allCases.firstIndex(of: instrument) {
+            return Float(instrumentReverbs[index])
+        }
+        return 0
+    }
+    
+    func setMuted(_ muted: Bool, for instrument: InstrumentType) {
+        if let index = InstrumentType.allCases.firstIndex(of: instrument) {
+            setInstrumentMute(index, muted)
+        }
+    }
+    
+    func isMuted(_ instrument: InstrumentType) -> Bool {
+        if let index = InstrumentType.allCases.firstIndex(of: instrument) {
+            return instrumentMutes[index]
+        }
+        return false
     }
 }
 

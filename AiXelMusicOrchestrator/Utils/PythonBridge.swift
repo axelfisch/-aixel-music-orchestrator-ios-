@@ -60,7 +60,8 @@ class PythonBridge {
     // MARK: - Export Functions
     
     func exportMusicXML(_ composition: Composition) async throws -> Data {
-        let inputData = try JSONEncoder().encode(composition)
+        let bridgeComposition = BridgeComposition(from: composition)
+        let inputData = try JSONEncoder().encode(bridgeComposition)
         let result = try await executePythonScript(
             function: "export_musicxml",
             input: inputData
@@ -76,7 +77,8 @@ class PythonBridge {
     }
     
     func exportMIDI(_ composition: Composition) async throws -> Data {
-        let inputData = try JSONEncoder().encode(composition)
+        let bridgeComposition = BridgeComposition(from: composition)
+        let inputData = try JSONEncoder().encode(bridgeComposition)
         let result = try await executePythonScript(
             function: "export_midi",
             input: inputData
@@ -91,7 +93,8 @@ class PythonBridge {
     }
     
     func exportPDF(_ composition: Composition) async throws -> Data {
-        let inputData = try JSONEncoder().encode(composition)
+        let bridgeComposition = BridgeComposition(from: composition)
+        let inputData = try JSONEncoder().encode(bridgeComposition)
         let result = try await executePythonScript(
             function: "export_pdf",
             input: inputData
@@ -287,6 +290,75 @@ struct FormsResponse: Codable {
 
 struct StylesResponse: Codable {
     let styles: [String]
+}
+
+// MARK: - Bridge Codable Models
+
+/// Flatten enums to raw values so Python receives strings
+struct BridgeComposition: Codable {
+    let title: String
+    let key: String
+    let form: String
+    let style: String
+    let tempo: Double
+    let measures: [BridgeMeasure]
+    
+    init(from composition: Composition) {
+        self.title = composition.title
+        self.key = composition.key
+        self.form = composition.form.rawValue
+        self.style = composition.style.rawValue
+        self.tempo = composition.tempo
+        self.measures = composition.measures.map { BridgeMeasure(from: $0) }
+    }
+}
+
+struct BridgeMeasure: Codable {
+    let chord: BridgeChord
+    let duration: Double
+    
+    init(from measure: Measure) {
+        self.chord = BridgeChord(from: measure.chord)
+        self.duration = measure.duration
+    }
+}
+
+struct BridgeChord: Codable {
+    let symbol: String
+    let notes: [String]
+    let voicing: BridgeVoicing?
+    
+    init(from chord: Chord) {
+        self.symbol = chord.symbol
+        self.notes = chord.notes
+        if let v = chord.voicing {
+            self.voicing = BridgeVoicing(from: v)
+        } else {
+            self.voicing = nil
+        }
+    }
+}
+
+struct BridgeVoicing: Codable {
+    let flute: String?
+    let piano: String?
+    let violin1: String?
+    let violin2: String?
+    let viola1: String?
+    let viola2: String?
+    let cello: String?
+    let bass: String?
+    
+    init(from v: Voicing) {
+        self.flute = v.flute
+        self.piano = v.piano
+        self.violin1 = v.violin1
+        self.violin2 = v.violin2
+        self.viola1 = v.viola1
+        self.viola2 = v.viola2
+        self.cello = v.cello
+        self.bass = v.bass
+    }
 }
 
 // MARK: - Error Types

@@ -13,14 +13,14 @@ struct Composition: Identifiable, Codable {
     let id = UUID()
     let title: String
     let key: String
-    let form: String
-    let style: String
+    let form: CompositionForm
+    let style: CompositionStyle
     let tempo: Double
     let measures: [Measure]
     let sections: [Section]
     let createdAt: Date
     
-    init(title: String = "Untitled", key: String, form: String, style: String, tempo: Double = 120, measures: [Measure], sections: [Section]) {
+    init(title: String = "Untitled", key: String, form: CompositionForm, style: CompositionStyle, tempo: Double = 120, measures: [Measure], sections: [Section]) {
         self.title = title
         self.key = key
         self.form = form
@@ -34,8 +34,8 @@ struct Composition: Identifiable, Codable {
     static let sample = Composition(
         title: "Sample Jazz Waltz",
         key: "Eb",
-        form: "AABA",
-        style: "Jazz Pop",
+        form: .aaba,
+        style: .jazzPop,
         tempo: 120,
         measures: [
             Measure(number: 1, chord: Chord(symbol: "Ebadd9/G", notes: ["G2", "Bb3", "Eb4", "F4"])),
@@ -170,6 +170,13 @@ enum InstrumentType: String, Codable, CaseIterable {
 
 // MARK: - Generation Parameters
 
+struct CompositionParameters {
+    let key: String
+    let form: CompositionForm
+    let style: CompositionStyle
+    let tempo: Int
+}
+
 struct GenerationParameters: Codable {
     let key: String
     let form: String
@@ -201,6 +208,22 @@ enum VoicingStyle: String, Codable, CaseIterable {
     case traditional = "Traditional"
     case modern = "Modern"
     case minimal = "Minimal"
+}
+
+// MARK: - App-level Composition Enums
+
+enum CompositionForm: String, Codable, CaseIterable {
+    case aaba = "AABA"
+    case abac = "ABAC"
+    case bars16 = "16 bars"
+    case bars32 = "32 bars"
+}
+
+enum CompositionStyle: String, Codable, CaseIterable {
+    case jazzPop = "Jazz Pop"
+    case bossaNova = "Bossa Nova"
+    case ecmStyle = "ECM Style"
+    case rubato = "Rubato"
 }
 
 // MARK: - Playback Models
