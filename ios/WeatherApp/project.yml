@@ -1,0 +1,27 @@
+name: WeatherApp
+options:
+  createIntermediateGroups: true
+  developmentLanguage: fr
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  WeatherApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: WeatherApp/WeatherApp/Sources
+    resources:
+      - path: WeatherApp/WeatherApp/Resources
+        optional: true
+    info:
+      path: WeatherApp/WeatherApp/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.weatherapp
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: 5.9
+schemes:
+  WeatherApp:
+    build:
+      targets:
+        WeatherApp: all
