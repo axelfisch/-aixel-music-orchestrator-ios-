@@ -1,0 +1,505 @@
+{
+  "Cmaj7": {
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B"
+    ],
+    "midi": [
+      60,
+      64,
+      67,
+      71
+    ],
+    "category": "major"
+  },
+  "Dmaj7": {
+    "notes": [
+      "D",
+      "F#",
+      "A",
+      "C#"
+    ],
+    "midi": [
+      62,
+      66,
+      69,
+      73
+    ],
+    "category": "major"
+  },
+  "Emaj7": {
+    "notes": [
+      "E",
+      "G#",
+      "B",
+      "D#"
+    ],
+    "midi": [
+      64,
+      68,
+      71,
+      75
+    ],
+    "category": "major"
+  },
+  "Fmaj7": {
+    "notes": [
+      "F",
+      "A",
+      "C",
+      "E"
+    ],
+    "midi": [
+      65,
+      69,
+      72,
+      76
+    ],
+    "category": "major"
+  },
+  "Gmaj7": {
+    "notes": [
+      "G",
+      "B",
+      "D",
+      "F#"
+    ],
+    "midi": [
+      67,
+      71,
+      74,
+      78
+    ],
+    "category": "major"
+  },
+  "Amaj7": {
+    "notes": [
+      "A",
+      "C#",
+      "E",
+      "G#"
+    ],
+    "midi": [
+      69,
+      73,
+      76,
+      80
+    ],
+    "category": "major"
+  },
+  "Bmaj7": {
+    "notes": [
+      "B",
+      "D#",
+      "F#",
+      "A#"
+    ],
+    "midi": [
+      71,
+      75,
+      78,
+      82
+    ],
+    "category": "major"
+  },
+  "Cmin7": {
+    "notes": [
+      "C",
+      "Eb",
+      "G",
+      "Bb"
+    ],
+    "midi": [
+      60,
+      63,
+      67,
+      70
+    ],
+    "category": "minor"
+  },
+  "Dmin7": {
+    "notes": [
+      "D",
+      "F",
+      "A",
+      "C"
+    ],
+    "midi": [
+      62,
+      65,
+      69,
+      72
+    ],
+    "category": "minor"
+  },
+  "Emin7": {
+    "notes": [
+      "E",
+      "G",
+      "B",
+      "D"
+    ],
+    "midi": [
+      64,
+      67,
+      71,
+      74
+    ],
+    "category": "minor"
+  },
+  "Fmin7": {
+    "notes": [
+      "F",
+      "Ab",
+      "C",
+      "Eb"
+    ],
+    "midi": [
+      65,
+      68,
+      72,
+      75
+    ],
+    "category": "minor"
+  },
+  "Gmin7": {
+    "notes": [
+      "G",
+      "Bb",
+      "D",
+      "F"
+    ],
+    "midi": [
+      67,
+      70,
+      74,
+      77
+    ],
+    "category": "minor"
+  },
+  "Amin7": {
+    "notes": [
+      "A",
+      "C",
+      "E",
+      "G"
+    ],
+    "midi": [
+      69,
+      72,
+      76,
+      79
+    ],
+    "category": "minor"
+  },
+  "Bmin7": {
+    "notes": [
+      "B",
+      "D",
+      "F#",
+      "A"
+    ],
+    "midi": [
+      71,
+      74,
+      78,
+      81
+    ],
+    "category": "minor"
+  },
+  "C7": {
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "Bb"
+    ],
+    "midi": [
+      60,
+      64,
+      67,
+      70
+    ],
+    "category": "dominant"
+  },
+  "D7": {
+    "notes": [
+      "D",
+      "F#",
+      "A",
+      "C"
+    ],
+    "midi": [
+      62,
+      66,
+      69,
+      72
+    ],
+    "category": "dominant"
+  },
+  "E7": {
+    "notes": [
+      "E",
+      "G#",
+      "B",
+      "D"
+    ],
+    "midi": [
+      64,
+      68,
+      71,
+      74
+    ],
+    "category": "dominant"
+  },
+  "F7": {
+    "notes": [
+      "F",
+      "A",
+      "C",
+      "Eb"
+    ],
+    "midi": [
+      65,
+      69,
+      72,
+      75
+    ],
+    "category": "dominant"
+  },
+  "G7": {
+    "notes": [
+      "G",
+      "B",
+      "D",
+      "F"
+    ],
+    "midi": [
+      67,
+      71,
+      74,
+      77
+    ],
+    "category": "dominant"
+  },
+  "A7": {
+    "notes": [
+      "A",
+      "C#",
+      "E",
+      "G"
+    ],
+    "midi": [
+      69,
+      73,
+      76,
+      79
+    ],
+    "category": "dominant"
+  },
+  "B7": {
+    "notes": [
+      "B",
+      "D#",
+      "F#",
+      "A"
+    ],
+    "midi": [
+      71,
+      75,
+      78,
+      81
+    ],
+    "category": "dominant"
+  },
+  "Dbmaj7": {
+    "notes": [
+      "Db",
+      "F",
+      "Ab",
+      "C"
+    ],
+    "midi": [
+      61,
+      65,
+      68,
+      72
+    ],
+    "category": "major"
+  },
+  "Ebmaj7": {
+    "notes": [
+      "Eb",
+      "G",
+      "Bb",
+      "D"
+    ],
+    "midi": [
+      63,
+      67,
+      70,
+      74
+    ],
+    "category": "major"
+  },
+  "Gbmaj7": {
+    "notes": [
+      "Gb",
+      "Bb",
+      "Db",
+      "F"
+    ],
+    "midi": [
+      66,
+      70,
+      73,
+      77
+    ],
+    "category": "major"
+  },
+  "Abmaj7": {
+    "notes": [
+      "Ab",
+      "C",
+      "Eb",
+      "G"
+    ],
+    "midi": [
+      68,
+      72,
+      75,
+      79
+    ],
+    "category": "major"
+  },
+  "Bbmaj7": {
+    "notes": [
+      "Bb",
+      "D",
+      "F",
+      "A"
+    ],
+    "midi": [
+      70,
+      74,
+      77,
+      81
+    ],
+    "category": "major"
+  },
+  "Ebmin7": {
+    "notes": [
+      "Eb",
+      "Gb",
+      "Bb",
+      "Db"
+    ],
+    "midi": [
+      63,
+      66,
+      70,
+      73
+    ],
+    "category": "minor"
+  },
+  "Abmin7": {
+    "notes": [
+      "Ab",
+      "Cb",
+      "Eb",
+      "Gb"
+    ],
+    "midi": [
+      68,
+      71,
+      75,
+      78
+    ],
+    "category": "minor"
+  },
+  "Bbmin7": {
+    "notes": [
+      "Bb",
+      "Db",
+      "F",
+      "Ab"
+    ],
+    "midi": [
+      70,
+      73,
+      77,
+      80
+    ],
+    "category": "minor"
+  },
+  "Cmaj7#11": {
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B",
+      "F#"
+    ],
+    "midi": [
+      60,
+      64,
+      67,
+      71,
+      78
+    ],
+    "category": "extended"
+  },
+  "Dmin13": {
+    "notes": [
+      "D",
+      "F",
+      "A",
+      "C",
+      "B"
+    ],
+    "midi": [
+      62,
+      65,
+      69,
+      72,
+      83
+    ],
+    "category": "extended"
+  },
+  "G11": {
+    "notes": [
+      "G",
+      "B",
+      "D",
+      "F",
+      "C"
+    ],
+    "midi": [
+      67,
+      71,
+      74,
+      77,
+      84
+    ],
+    "category": "extended"
+  },
+  "Amin9": {
+    "notes": [
+      "A",
+      "C",
+      "E",
+      "G",
+      "B"
+    ],
+    "midi": [
+      69,
+      72,
+      76,
+      79,
+      83
+    ],
+    "category": "extended"
+  }
+}

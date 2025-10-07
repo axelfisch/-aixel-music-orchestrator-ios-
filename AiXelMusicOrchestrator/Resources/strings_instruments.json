@@ -1,0 +1,56 @@
+{
+  "VIOLIN_1": {
+    "name": "Violon 1",
+    "range": {
+      "min": 55,
+      "max": 103
+    },
+    "clef": "treble",
+    "color": "#E74C3C"
+  },
+  "VIOLIN_2": {
+    "name": "Violon 2",
+    "range": {
+      "min": 55,
+      "max": 98
+    },
+    "clef": "treble",
+    "color": "#E67E22"
+  },
+  "VIOLA_1": {
+    "name": "Alto 1",
+    "range": {
+      "min": 48,
+      "max": 91
+    },
+    "clef": "alto",
+    "color": "#F39C12"
+  },
+  "VIOLA_2": {
+    "name": "Alto 2",
+    "range": {
+      "min": 48,
+      "max": 86
+    },
+    "clef": "alto",
+    "color": "#F1C40F"
+  },
+  "CELLO": {
+    "name": "Violoncelle",
+    "range": {
+      "min": 36,
+      "max": 79
+    },
+    "clef": "bass",
+    "color": "#27AE60"
+  },
+  "DOUBLE_BASS": {
+    "name": "Contrebasse",
+    "range": {
+      "min": 28,
+      "max": 67
+    },
+    "clef": "bass",
+    "color": "#2980B9"
+  }
+}
