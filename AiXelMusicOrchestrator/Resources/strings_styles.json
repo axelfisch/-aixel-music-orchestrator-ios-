@@ -1,0 +1,79 @@
+{
+  "JAZZ": {
+    "name": "Jazz",
+    "tempo": 120,
+    "timeSignature": "4/4",
+    "characteristics": "Swing, accords étendus, improvisation",
+    "color": "#FF6B6B"
+  },
+  "WALTZ": {
+    "name": "Waltz",
+    "tempo": 90,
+    "timeSignature": "3/4",
+    "characteristics": "Élégant, romantique, ternaire",
+    "color": "#4ECDC4"
+  },
+  "BOSSA_NOVA": {
+    "name": "Bossa-Nova",
+    "tempo": 110,
+    "timeSignature": "4/4",
+    "characteristics": "Doux, syncopé, brésilien",
+    "color": "#45B7D1"
+  },
+  "CLASSICAL": {
+    "name": "Classical",
+    "tempo": 100,
+    "timeSignature": "4/4",
+    "characteristics": "Structuré, harmonique, traditionnel",
+    "color": "#96CEB4"
+  },
+  "BALLAD": {
+    "name": "Ballad",
+    "tempo": 70,
+    "timeSignature": "4/4",
+    "characteristics": "Lent, expressif, émotionnel",
+    "color": "#FFEAA7"
+  },
+  "FUSION": {
+    "name": "Fusion",
+    "tempo": 130,
+    "timeSignature": "4/4",
+    "characteristics": "Moderne, électrique, complexe",
+    "color": "#DDA0DD"
+  },
+  "LATIN": {
+    "name": "Latin",
+    "tempo": 115,
+    "timeSignature": "4/4",
+    "characteristics": "Rythmé, percussif, chaleureux",
+    "color": "#FFB347"
+  },
+  "BLUES": {
+    "name": "Blues",
+    "tempo": 85,
+    "timeSignature": "4/4",
+    "characteristics": "Mélancolique, pentatonique, expressif",
+    "color": "#87CEEB"
+  },
+  "SWING": {
+    "name": "Swing",
+    "tempo": 140,
+    "timeSignature": "4/4",
+    "characteristics": "Énergique, dansant, big band",
+    "color": "#F0A500"
+  },
+  "CONTEMPORARY": {
+    "name": "Contemporary",
+    "tempo": 105,
+    "timeSignature": "4/4",
+    "characteristics": "Moderne, accessible, polyvalent",
+    "color": "#E74C3C"
+  },
+  "CHAMBER": {
+    "name": "Chamber",
+    "tempo": 95,
+    "timeSignature": "4/4",
+    "characteristics": "Intime, raffiné, acoustique",
+    "color": "#9B59B6"
+  }
+}
