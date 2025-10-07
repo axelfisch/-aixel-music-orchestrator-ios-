@@ -1,0 +1,38 @@
+name: StellarWebApp
+options:
+  minimumXcodeGenVersion: 2.38.0
+  deploymentTarget:
+    iOS: "15.0"
+settings:
+  base:
+    SWIFT_VERSION: 5.9
+    IPHONEOS_DEPLOYMENT_TARGET: 15.0
+    TARGETED_DEVICE_FAMILY: 1,2
+    INFOPLIST_FILE: Support/Info.plist
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+
+targets:
+  StellarWebApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: Sources
+    resources:
+      - path: Resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.StellarWebApp
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 1.0.0
+        DEVELOPMENT_TEAM: ""
+        CODE_SIGN_STYLE: Automatic
+schemes:
+  StellarWebApp:
+    build:
+      targets:
+        StellarWebApp: all
+    run:
+      config: Debug
+    archive:
+      config: Release
